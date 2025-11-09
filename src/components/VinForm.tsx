@@ -1,0 +1,186 @@
+import { useState } from "react";
+
+interface ApiDataResults {
+    Value: string,
+    ValueId: string,
+    Variable: string,
+    VariableId: number
+};
+
+export default function VinForm() {
+    const [vin, setVin] = useState("");
+    const [year, setYear] = useState("");
+    const apiDataVariables = [
+        "Active Safety System Note",
+        "Adaptive Cruise Control (ACC)",
+        "Adaptive Driving Beam (ADB)",
+        "Additional Error Text",
+        "Anti-lock Braking System (ABS)",
+        "Auto-Reverse System for Windows and Sunroofs",
+        "Automatic Crash Notification (ACN) / Advanced Automatic Crash Notification (AACN)",
+        "Automatic Pedestrian Alerting Sound (for Hybrid and EV only)",
+        "Axle Configuration",
+        "Axles",
+        "Backup Camera",
+        "Base Price ($)",
+        "Battery Current (Amps) From",
+        "Battery Current (Amps) To",
+        "Battery Energy (kWh) From",
+        "Battery Energy (kWh) To",
+        "Battery Type",
+        "Battery Voltage (Volts) From",
+        "Battery Voltage (Volts) To",
+        "Bed Length (inches)",
+        "Bed Type",
+        "Blind Spot Intervention (BSI)",
+        "Blind Spot Warning (BSW)",
+        "Body Class",
+        "Brake System Description",
+        "Brake System Type",
+        "Bus Floor Configuration Type",
+        "Bus Length (feet)",
+        "Bus Type",
+        "Cab Type",
+        "Charger Level",
+        "Charger Power (kW)",
+        "Combined Braking System (CBS)",
+        "Cooling Type",
+        "Crash Imminent Braking (CIB)",
+        "Curb Weight (pounds)",
+        "Curtain Air Bag Locations",
+        "Custom Motorcycle Type",
+        "Daytime Running Light (DRL)",
+        "Destination Market",
+        "Displacement (CC)",
+        "Displacement (CI)",
+        "Displacement (L)",
+        "Doors",
+        "Drive Type",
+        "Dynamic Brake Support (DBS)",
+        "EV Drive Unit",
+        "Electrification Level",
+        "Electronic Stability Control (ESC)",
+        "Engine Brake (hp) From",
+        "Engine Brake (hp) To",
+        "Engine Configuration",
+        "Engine Manufacturer",
+        "Engine Model",
+        "Engine Number of Cylinders",
+        "Engine Power (kW)",
+        "Engine Stroke Cycles",
+        "Entertainment System",
+        "Error Code",
+        "Error Text",
+        "Event Data Recorder (EDR)",
+        "Forward Collision Warning (FCW)",
+        "Front Air Bag Locations",
+        "Fuel Delivery / Fuel Injection Type",
+        "Fuel Type - Primary",
+        "Fuel Type - Secondary",
+        "Fuel-Tank Material",
+        "Fuel-Tank Type",
+        "Gross Combination Weight Rating From",
+        "Gross Combination Weight Rating To",
+        "Gross Vehicle Weight Rating From",
+        "Gross Vehicle Weight Rating To",
+        "Headlamp Light Source",
+        "Keyless Ignition",
+        "Knee Air Bag Locations",
+        "Lane Centering Assistance",
+        "Lane Departure Warning (LDW)",
+        "Lane Keeping Assistance (LKA)",
+        "Make",
+        "Manufacturer Name",
+        "Model",
+        "Model Year",
+        "Motorcycle Chassis Type",
+        "Motorcycle Suspension Type",
+        "Non-Land Use",
+        "Note",
+        "Number of Battery Cells per Module",
+        "Number of Battery Modules per Pack",
+        "Number of Battery Packs per Vehicle",
+        "Number of Seat Rows",
+        "Number of Seats",
+        "Number of Wheels",
+        "Other Battery Info",
+        "Other Bus Info",
+        "Other Engine Info",
+        "Other Motorcycle Info",
+        "Other Restraint System Info",
+        "Other Trailer Info",
+        "Parking Assist",
+        "Pedestrian Automatic Emergency Braking (PAEB)",
+        "Plant City",
+        "Plant Company Name",
+        "Plant Country",
+        "Plant State",
+        "Possible Values",
+        "Pretensioner",
+        "Rear Automatic Emergency Braking",
+        "Rear Cross Traffic Alert",
+        "SAE Automation Level From",
+        "SAE Automation Level To",
+        "Seat Belt Type",
+        "Seat Cushion Air Bag Locations",
+        "Semiautomatic Headlamp Beam Switching",
+        "Series",
+        "Series2",
+        "Side Air Bag Locations",
+        "Steering Location",
+        "Suggested VIN",
+        "Tire Pressure Monitoring System (TPMS) Type",
+        "Top Speed (MPH)",
+        "Track Width (inches)",
+        "Traction Control",
+        "Trailer Body Type",
+        "Trailer Length (feet)",
+        "Trailer Type Connection",
+        "Transmission Speeds",
+        "Transmission Style",
+        "Trim",
+        "Trim2",
+        "Turbo",
+        "Valve Train Design",
+        "Vehicle Descriptor",
+        "Vehicle Type",
+        "Wheel Base (inches) From",
+        "Wheel Base (inches) To",
+        "Wheel Base Type",
+        "Wheel Size Front (inches)",
+        "Wheel Size Rear (inches)",
+        "Wheelie Mitigation",
+        "Windows"
+    ];
+
+    
+    function buildApiUrl(): URL {
+        return new URL(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/${vin}?format=json&modelyear=${year}`) ;
+    }
+
+    async function onSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        const apiUrl = buildApiUrl();
+        const results = await fetch(apiUrl);
+        const resultsData = await results.json();
+        const data: ApiDataResults[] = resultsData["Results"];
+        // const test = data.filter(item => item["Variable"] === "Vehicle Descriptor");
+        // console.log(test[0].Value);
+    }
+
+  return (
+    <>
+        <form onSubmit={onSubmit}>
+            <div>
+                <label htmlFor="vin">Vin</label>
+                <input type="text" name="vin" id="vin" placeholder="VIN" value={vin} onChange={(e) => setVin(e.target.value)} />
+            </div>
+            <div>
+                <label htmlFor="year">Year</label>
+                <input type="text" name="year" id="year" placeholder="Year" value={year} onChange={(e) => setYear(e.target.value)} />
+            </div>
+            <button type="submit">Search</button>
+        </form>
+    </>
+  )
+}
