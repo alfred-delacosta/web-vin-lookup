@@ -1,4 +1,5 @@
 import VinForm from "./components/VinForm"
+import Attribution from "./components/Attribution"
 
 function App() {
 
@@ -10,6 +11,7 @@ function App() {
       <section>
         <VinForm />
       </section>
+      <Attribution />
     </>
   )
 }

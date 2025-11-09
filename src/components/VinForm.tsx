@@ -10,6 +10,8 @@ interface ApiDataResults {
 export default function VinForm() {
     const [vin, setVin] = useState("");
     const [year, setYear] = useState("");
+    const [requestLoading, setRequestLoading] = useState(false);
+    const [errorFromRequest, setErrorFromRequest] = useState("");
     const apiDataVariables = [
         "Active Safety System Note",
         "Adaptive Cruise Control (ACC)",
@@ -159,13 +161,24 @@ export default function VinForm() {
     }
 
     async function onSubmit(e: React.FormEvent) {
+        setRequestLoading(true);
+        setErrorFromRequest("");
         e.preventDefault();
         const apiUrl = buildApiUrl();
-        const results = await fetch(apiUrl);
-        const resultsData = await results.json();
-        const data: ApiDataResults[] = resultsData["Results"];
-        // const test = data.filter(item => item["Variable"] === "Vehicle Descriptor");
-        // console.log(test[0].Value);
+        try {
+            const results = await fetch(apiUrl);
+            if (results.status === 200) {
+                const resultsData = await results.json();
+                const data: ApiDataResults[] = resultsData["Results"];
+                // const test = data.filter(item => item["Variable"] === "Vehicle Descriptor");
+                // console.log(test[0].Value);
+            } else {
+                throw new Error(`The API returned the following error:\nStatus: ${results.status}\nStatus Text: ${results.statusText}`);
+            }
+        } catch (error: any) {
+            setErrorFromRequest(error.message);
+        }
+        setRequestLoading(false);
     }
 
   return (
@@ -173,14 +186,22 @@ export default function VinForm() {
         <form onSubmit={onSubmit}>
             <div>
                 <label htmlFor="vin">Vin</label>
-                <input type="text" name="vin" id="vin" placeholder="VIN" value={vin} onChange={(e) => setVin(e.target.value)} />
+                <input type="text" name="vin" id="vin" placeholder="VIN" value={vin} onChange={(e) => setVin(e.target.value)} disabled={requestLoading} />
             </div>
             <div>
                 <label htmlFor="year">Year</label>
-                <input type="text" name="year" id="year" placeholder="Year" value={year} onChange={(e) => setYear(e.target.value)} />
+                <input type="text" name="year" id="year" placeholder="Year" value={year} onChange={(e) => setYear(e.target.value)} disabled={requestLoading} />
             </div>
-            <button type="submit">Search</button>
+            <button type="submit" disabled={requestLoading}>Search</button>
         </form>
+        <section>
+            {errorFromRequest.length > 0 && (
+                <>
+                    <h3>Oh no! It looks like there was an error with the API. See the details below.</h3>
+                    <p>{errorFromRequest}</p>
+                </>
+            )}
+        </section>
     </>
   )
 }
