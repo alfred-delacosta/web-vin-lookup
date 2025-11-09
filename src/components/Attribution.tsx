@@ -1,7 +1,7 @@
 export default function Attribution() {
 
   return (
-    <footer>
+    <footer className="flex-item">
         <p>
             <strong>Created by <a href="https://alfred-delacosta.github.io" target="_blank">Alfred De La Costa</a> 🧑🏻‍💻</strong>
         </p>

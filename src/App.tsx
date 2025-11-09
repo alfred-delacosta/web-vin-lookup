@@ -4,15 +4,15 @@ import Attribution from "./components/Attribution"
 function App() {
 
   return (
-    <>
-      <header>
+    <div className="container">
+      <header className="header flex-item">
         <h1>VIN Lookup</h1>
       </header>
-      <section>
+      <section className="vin-form-section flex-item">
         <VinForm />
       </section>
       <Attribution />
-    </>
+    </div>
   )
 }
 
