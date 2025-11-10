@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createEmptyCarDetail, type CarDetailsInterface } from "../App";
 
 interface ApiDataResults {
   Value: string;
@@ -7,7 +8,13 @@ interface ApiDataResults {
   VariableId: number;
 }
 
-export default function VinForm() {
+interface ChildProps {
+  setCarDetails: React.Dispatch<
+    React.SetStateAction<CarDetailsInterface | null>
+  >;
+}
+
+export default function VinForm({ setCarDetails }: ChildProps) {
   const [vin, setVin] = useState("");
   const [year, setYear] = useState("");
   const [requestLoading, setRequestLoading] = useState(false);
@@ -161,6 +168,16 @@ export default function VinForm() {
     );
   }
 
+  function buildCarDetails(data: ApiDataResults[]) {
+    let carDetails = createEmptyCarDetail();
+
+    data.forEach((item) => {
+      carDetails[item["Variable"] as keyof CarDetailsInterface] = item["Value"];
+    });
+
+    return carDetails;
+  }
+
   async function onSubmit(e: React.FormEvent) {
     setRequestLoading(true);
     setErrorFromRequest("");
@@ -171,8 +188,7 @@ export default function VinForm() {
       if (results.status === 200) {
         const resultsData = await results.json();
         const data: ApiDataResults[] = resultsData["Results"];
-        // const test = data.filter(item => item["Variable"] === "Vehicle Descriptor");
-        // console.log(test[0].Value);
+        setCarDetails(buildCarDetails(data));
       } else {
         throw new Error(
           `The API returned the following error:\nStatus: ${results.status}\nStatus Text: ${results.statusText}`
@@ -184,11 +200,20 @@ export default function VinForm() {
     setRequestLoading(false);
   }
 
+  function clearCar(e: React.FormEvent) {
+    e.preventDefault();
+    setVin("");
+    setYear("");
+    setCarDetails(null);
+  }
+
   return (
     <div className="vin-form-container">
       <form onSubmit={onSubmit} className="vin-form">
         <div>
-          <label htmlFor="vin">Vin</label>
+          <div className="label-container">
+            <label htmlFor="vin">Vin</label>
+          </div>
           <input
             type="text"
             name="vin"
@@ -201,7 +226,9 @@ export default function VinForm() {
           />
         </div>
         <div>
-          <label htmlFor="year">Year</label>
+          <div className="label-container">
+            <label htmlFor="year">Year</label>
+          </div>
           <input
             type="text"
             name="year"
@@ -212,11 +239,14 @@ export default function VinForm() {
             disabled={requestLoading}
           />
         </div>
-        <button type="submit" disabled={requestLoading}>
-          Search
-        </button>
+        <div className="row">
+          <button type="submit" className="custom-button" disabled={requestLoading}>
+            Search
+          </button>
+          <button className="custom-button" onClick={clearCar}>Clear Car</button>
+        </div>
       </form>
-      <section>
+      <section className="full-col">
         {errorFromRequest.length > 0 && (
           <>
             <h3>
@@ -227,6 +257,7 @@ export default function VinForm() {
           </>
         )}
       </section>
+      <section className="full-col loading-container">{requestLoading && <span className="loader"></span>}</section>
     </div>
   );
 }
