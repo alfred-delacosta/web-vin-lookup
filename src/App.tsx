@@ -295,15 +295,15 @@ function App() {
   const [carDetails, setCarDetails] = useState<CarDetailsInterface | null>(null);
 
   return (
-    <div className="container">
+    <div className="container roboto-google">
       <header className="header flex-item">
-        <h1>VIN Lookup</h1>
+        <h1 className="main-title">🔍 VIN Lookup 🚗</h1>
       </header>
       <section className="vin-form-section flex-item">
         <VinForm setCarDetails={setCarDetails} />
       </section>
       {carDetails && (
-        <section>
+        <section className="car-details">
           <CarDetails carDetails={carDetails} />
         </section>
       )}

@@ -9,7 +9,9 @@ interface ApiDataResults {
 }
 
 interface ChildProps {
-  setCarDetails: React.Dispatch<React.SetStateAction<CarDetailsInterface | null>>
+  setCarDetails: React.Dispatch<
+    React.SetStateAction<CarDetailsInterface | null>
+  >;
 }
 
 export default function VinForm({ setCarDetails }: ChildProps) {
@@ -157,7 +159,7 @@ export default function VinForm({ setCarDetails }: ChildProps) {
     "Wheel Size Front (inches)",
     "Wheel Size Rear (inches)",
     "Wheelie Mitigation",
-    "Windows"
+    "Windows",
   ];
 
   function buildApiUrl(): URL {
@@ -169,7 +171,7 @@ export default function VinForm({ setCarDetails }: ChildProps) {
   function buildCarDetails(data: ApiDataResults[]) {
     let carDetails = createEmptyCarDetail();
 
-    data.forEach(item => {
+    data.forEach((item) => {
       carDetails[item["Variable"] as keyof CarDetailsInterface] = item["Value"];
     });
 
@@ -202,7 +204,9 @@ export default function VinForm({ setCarDetails }: ChildProps) {
     <div className="vin-form-container">
       <form onSubmit={onSubmit} className="vin-form">
         <div>
-          <label htmlFor="vin">Vin</label>
+          <div>
+            <label htmlFor="vin">Vin</label>
+          </div>
           <input
             type="text"
             name="vin"
@@ -215,7 +219,9 @@ export default function VinForm({ setCarDetails }: ChildProps) {
           />
         </div>
         <div>
-          <label htmlFor="year">Year</label>
+          <div>
+            <label htmlFor="year">Year</label>
+          </div>
           <input
             type="text"
             name="year"
@@ -226,9 +232,12 @@ export default function VinForm({ setCarDetails }: ChildProps) {
             disabled={requestLoading}
           />
         </div>
-        <button type="submit" disabled={requestLoading}>
-          Search
-        </button>
+        <div className="row">
+          <button type="submit" disabled={requestLoading}>
+            Search
+          </button>
+          <button onClick={() => setCarDetails(null)}>Clear Car</button>
+        </div>
       </form>
       <section>
         {errorFromRequest.length > 0 && (
@@ -241,6 +250,7 @@ export default function VinForm({ setCarDetails }: ChildProps) {
           </>
         )}
       </section>
+      <section>{requestLoading && <span className="loader"></span>}</section>
     </div>
   );
 }
