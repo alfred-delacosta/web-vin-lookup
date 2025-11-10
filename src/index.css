@@ -43,8 +43,6 @@ body {
   flex: 100%;
 }
 
-.flex-item {}
-
 .header {
   flex: 100%;
 }
@@ -52,10 +50,11 @@ body {
 .vin-form-container {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
-input {
-  
+.loading-container {
+  text-align: center;
 }
 
 .vin-form-section {
@@ -93,6 +92,7 @@ input {
 .title-text {
   font-size: 1.1rem;
   font-weight: bold;
+  margin-bottom: .5rem;
 }
 
 .car-name {
@@ -110,13 +110,9 @@ input {
   text-align: center;
 }
 
-.vin-form {
-
-}
-
 .loader {
-  width: 48px;
-  height: 48px;
+  width: 5rem;
+  height: 5rem;
   border: 3px dotted #FFF;
   border-style: solid solid dotted dotted;
   border-radius: 50%;
@@ -136,8 +132,8 @@ input {
   margin: auto;
   border: 3px dotted #FF3D00;
   border-style: solid solid dotted;
-  width: 24px;
-  height: 24px;
+  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
   animation: rotationBack 1s linear infinite;
   transform-origin: center center;
@@ -164,7 +160,95 @@ label {
   font-size: 1.2rem;
 }
 
+.label-container {
+  margin-top: 2rem;
+}
+
+.custom-button {
+	box-shadow: 3px 4px 0px 0px #1564ad;
+	background:linear-gradient(to bottom, #79bbff 5%, #378de5 100%);
+	background-color:#79bbff;
+	border-radius:5px;
+	border:1px solid #337bc4;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:17px;
+	font-weight:bold;
+	padding:12px 44px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #528ecc;
+}
+.custom-button:hover {
+	background:linear-gradient(to bottom, #378de5 5%, #79bbff 100%);
+	background-color:#378de5;
+}
+.custom-button:active {
+	position:relative;
+	top:1px;
+}
+
+input[type="text"] {
+  /* Remove default appearance */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  /* Typography */
+  font-family: inherit;
+  font-size: 1rem;
+
+  /* Box model */
+  width: 100%;
+  max-width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+
+  /* Focus ring (accessible) */
+  outline: none;
+  transition: all 0.22s ease-in-out;
+}
+
+/* Focus state – blue ring + brand accent */
+input[type="text"]:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+  background-color: #f8fafc;
+}
+
+/* Placeholder styling */
+input[type="text"]::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+form input {
+  margin-top: 0.5rem;
+}
+
 footer {
   flex: 100%;
   padding: 1.3rem;
+}
+
+@media (max-width: 600px) {
+  .main-title {
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    font-size: clamp(2.5rem, 8vw, 7rem);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    text-transform: uppercase; /* optional for modern impact */
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+
+  .title-text {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: .5rem;
+  }
 }

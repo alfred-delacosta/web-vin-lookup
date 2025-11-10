@@ -11,7 +11,7 @@ export default function CarDetails({ carDetails }: ChildProps) {
     function showCarDetails() {
         let elements = [];
         for (const val in carDetails) {
-            if (carDetails[val as keyof CarDetailsInterface] !== null) {
+            if (carDetails[val as keyof CarDetailsInterface] !== null && carDetails[val as keyof CarDetailsInterface] !== "") {
                 elements.push(
                 <div className="card" key={val}>
                     <div className="car-details-item">

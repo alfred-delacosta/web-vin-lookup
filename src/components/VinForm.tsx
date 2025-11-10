@@ -200,11 +200,18 @@ export default function VinForm({ setCarDetails }: ChildProps) {
     setRequestLoading(false);
   }
 
+  function clearCar(e: React.FormEvent) {
+    e.preventDefault();
+    setVin("");
+    setYear("");
+    setCarDetails(null);
+  }
+
   return (
     <div className="vin-form-container">
       <form onSubmit={onSubmit} className="vin-form">
         <div>
-          <div>
+          <div className="label-container">
             <label htmlFor="vin">Vin</label>
           </div>
           <input
@@ -219,7 +226,7 @@ export default function VinForm({ setCarDetails }: ChildProps) {
           />
         </div>
         <div>
-          <div>
+          <div className="label-container">
             <label htmlFor="year">Year</label>
           </div>
           <input
@@ -233,13 +240,13 @@ export default function VinForm({ setCarDetails }: ChildProps) {
           />
         </div>
         <div className="row">
-          <button type="submit" disabled={requestLoading}>
+          <button type="submit" className="custom-button" disabled={requestLoading}>
             Search
           </button>
-          <button onClick={() => setCarDetails(null)}>Clear Car</button>
+          <button className="custom-button" onClick={clearCar}>Clear Car</button>
         </div>
       </form>
-      <section>
+      <section className="full-col">
         {errorFromRequest.length > 0 && (
           <>
             <h3>
@@ -250,7 +257,7 @@ export default function VinForm({ setCarDetails }: ChildProps) {
           </>
         )}
       </section>
-      <section>{requestLoading && <span className="loader"></span>}</section>
+      <section className="full-col loading-container">{requestLoading && <span className="loader"></span>}</section>
     </div>
   );
 }
