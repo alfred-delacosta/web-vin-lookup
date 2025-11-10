@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createEmptyCarDetail, type CarDetailsInterface } from "../App";
 
 interface ApiDataResults {
   Value: string;
@@ -7,7 +8,11 @@ interface ApiDataResults {
   VariableId: number;
 }
 
-export default function VinForm() {
+interface ChildProps {
+  setCarDetails: React.Dispatch<React.SetStateAction<CarDetailsInterface | null>>
+}
+
+export default function VinForm({ setCarDetails }: ChildProps) {
   const [vin, setVin] = useState("");
   const [year, setYear] = useState("");
   const [requestLoading, setRequestLoading] = useState(false);
@@ -152,13 +157,23 @@ export default function VinForm() {
     "Wheel Size Front (inches)",
     "Wheel Size Rear (inches)",
     "Wheelie Mitigation",
-    "Windows",
+    "Windows"
   ];
 
   function buildApiUrl(): URL {
     return new URL(
       `https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/${vin}?format=json&modelyear=${year}`
     );
+  }
+
+  function buildCarDetails(data: ApiDataResults[]) {
+    let carDetails = createEmptyCarDetail();
+
+    data.forEach(item => {
+      carDetails[item["Variable"] as keyof CarDetailsInterface] = item["Value"];
+    });
+
+    return carDetails;
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -171,8 +186,7 @@ export default function VinForm() {
       if (results.status === 200) {
         const resultsData = await results.json();
         const data: ApiDataResults[] = resultsData["Results"];
-        // const test = data.filter(item => item["Variable"] === "Vehicle Descriptor");
-        // console.log(test[0].Value);
+        setCarDetails(buildCarDetails(data));
       } else {
         throw new Error(
           `The API returned the following error:\nStatus: ${results.status}\nStatus Text: ${results.statusText}`
